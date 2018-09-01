@@ -1,0 +1,221 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+  license:
+    name: MIT
+servers:
+  - url: api-docs.json
+paths:
+  /auth/sign_in:
+    post:
+      summary: Login in
+      operationId: signin
+      tags:
+        - auth
+      requestBody:
+        description: Log in with existing user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+            description: Expected response to a valid request
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/JWTtoken"
+        '401':
+            description: Not authenticated
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+        default:
+            description: unexpected error
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+
+  /auth/register:
+    post:
+      summary: Register new user
+      operationId: register
+      tags:
+        - auth
+      requestBody:
+        description: Register new user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newUser'
+      responses:
+        '200':
+            description: Expected response to a valid request
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/newUser"
+        '400':
+            description: Not authenticated
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+        default:
+            description: unexpected error
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+
+  /auth/forgot_password:
+    post:
+      summary: Forgot password
+      operationId: forgot password
+      tags:
+        - auth
+      requestBody:
+        description: Email to reset password
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userMail'
+      responses:
+        '200':
+            description: Expected response to a valid request
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/JWTtoken"
+        '401':
+            description: Not authenticated
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+        default:
+            description: unexpected error
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+  /auth/reset_password:
+    post:
+      summary: Reset password
+      operationId: resetpassword
+      tags:
+        - auth
+      requestBody:
+        description: Email to reset password
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      parameters:
+        - name: Authorization
+          in: header
+          description: Authentication token
+          required: false
+          schema:
+            type: string
+          
+      responses:
+        '200':
+            description: Expected response to a valid request
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/reset_password"
+        '401':
+            description: Not authenticated
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+        default:
+            description: unexpected error
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    userMail:
+      required:
+        - email
+      properties:
+        email:
+          type: string
+    
+    reset_password:
+      required:
+          - token
+          - newPassword
+          - verifyPassword   
+      properties:
+          token:
+            type: string
+          newPassword:
+            type: string
+          verifyPassword:
+            type: string
+    newUser:
+      required:
+          - fullName
+          - email
+          - hash_password   
+          - role  
+      properties:
+          fullName:
+            type: string
+          email:
+            type: string
+          hash_password:
+            type: string
+          role:
+            type: string
+    User:
+        required:
+            - mail
+            - password      
+        properties:
+            mail:
+              type: string
+            password:
+              type: string
+    JWTtoken:
+      required:
+        - type
+      properties:
+        token:
+          type: string
+    Pet:
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        tag:
+          type: string
+    Pets:
+      type: array
+      items:
+        $ref: "#/components/schemas/Pet"
+    Error:
+      required:
+        - message
+      properties:
+        message:
+          type: string
