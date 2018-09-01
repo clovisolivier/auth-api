@@ -9,6 +9,7 @@ var express = require('express'),
     config = require('./config/index');
 
 mongoose.Promise = global.Promise;
+console.log('config.db :'+config.db);
 mongoose.connect(config.db, { useNewUrlParser: true });
 
 app.use(bodyParser.urlencoded({extended: true}));
