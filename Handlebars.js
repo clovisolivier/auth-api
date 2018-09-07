@@ -1,7 +1,7 @@
 var hbs = require('nodemailer-express-handlebars'),
     path = require('path'),
-    email = process.env.MAILER_EMAIL_ID || 'clovisolivieryobit@gmail.com',
-    pass = process.env.MAILER_PASSWORD || 'tet5jedi',
+    email = process.env.SENDGRID_USERNAME,
+    pass = process.env.SENDGRID_PASSWORD,
     nodemailer = require('nodemailer');
 
 var smtpTransport = nodemailer.createTransport({
