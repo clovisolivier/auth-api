@@ -36,9 +36,9 @@ app.use(function (req, res, next) {
 var routes = require('./api/routes/todoListRoutes');
 routes(app);
 
-//app.use("/v1", swaggerpath);
+app.use("/v1", swaggerpath);
 var swagger = require('swagger-node-express').createNew(swaggerpath);
-//app.use(express.static('dist'));
+app.use(express.static('dist'));
 swagger.setApiInfo({
     title: "Auth API doc",
     description: "API to manage user authentification",
@@ -47,12 +47,12 @@ swagger.setApiInfo({
     license: "MIT",
     licenseUrl: "https://opensource.org/licenses/MIT"
 });
-/*
+
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/dist/index.html');
 });
 
-*/
+
 app.use(function (req, res) {
     res.status(404).send({ url: req.originalUrl + ' not found' })
 });
