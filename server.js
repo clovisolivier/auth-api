@@ -8,30 +8,7 @@ var express = require('express'),
     jsonwebtoken = require("jsonwebtoken"),
     config = require('./config/index'),
     cors = require('cors'),
-    winston = require('winston');
-
-    const { createLogger, format, transports } = require('winston');
-    const { combine, timestamp, label, prettyPrint } = format;
-
-const logger = winston.createLogger({
-    format: format.combine(
-        format.label()
-      ),
-    transports: [
-      new winston.transports.File({ filename: 'error.log', level: 'error' }),
-      new winston.transports.File({ filename: 'combined.log' })
-    ]
-  });
-
-  //
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-// 
-if (process.env.NODE_ENV !== 'production') {
-    logger.add(new winston.transports.Console({
-      format: winston.format.simple()
-    }));
-  }
+    logger = require('./logger');
 
 
 //Mongo connection
@@ -68,7 +45,7 @@ routes(app);
 app.use(express.static('dist'));
 logger.info('Swagger API running!');
 
-// Default path
+// Error path
 app.use(function (req, res) {
     logger.info(req.originalUrl + ' not found');
     res.status(404).send({ url: req.originalUrl + ' not found' })

@@ -7,7 +7,8 @@ User = mongoose.model('User'),
 async = require('async'),
 crypto = require('crypto'),
 smtpTransport = require('../../Handlebars.js'),
-config = require('../../config/index');
+config = require('../../config/index'),
+logger = require('../../logger');;
 
 
 exports.register = function(req,res){
@@ -16,6 +17,7 @@ exports.register = function(req,res){
     newUser.hash_password = bcrypt.hashSync(req.body.password, 10);
     newUser.save(function(err, user){
         if (err) {
+            logger.error(err);
             return res.status(400).send({
                 message: err
             });
@@ -30,7 +32,7 @@ exports.sign_in = function(req, res) {
     User.findOne({
         email: req.body.email
     }, function(err, user){
-        if (err) throw err;
+        if (err) logger.error(err);
         if (!user){
             res.status(401).json({ message: 'Authentication failed. User not found.'});
         } else if (user){
@@ -97,6 +99,7 @@ exports.forgot_password = function(req, res){
             })
         }
     ], function(err){
+        logger.error(err);
         return res.status(422).json({message: err});
     });
 };
@@ -115,6 +118,7 @@ exports.reset_password = function(req, res, next){
                 user.reset_password_expires = undefined;
                 user.save(function(err){
                     if(err){
+                        logger.error(err);
                         return res.status(422).send({
                             message:err
                         });
@@ -133,6 +137,7 @@ exports.reset_password = function(req, res, next){
                             if (!err){
                                 return res.json({message: 'Password reset'});
                             } else {
+                                logger.error(err); 
                                 return done(err);
                             } 
                         });
