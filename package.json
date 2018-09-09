@@ -20,8 +20,10 @@
   "dependencies": {
     "bcrypt": "^1.0.2",
     "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
+    "method-override": "^3.0.0",
     "minimist": "^1.2.0",
     "mongoose": "^5.2.9",
     "nodemailer": "^4.6.8",
