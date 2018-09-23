@@ -8,7 +8,13 @@ var express = require('express'),
     jsonwebtoken = require("jsonwebtoken"),
     config = require('./config/index'),
     cors = require('cors'),
-    logger = require('./logger');
+    logger = require('./logger'),
+    helmet = require('helmet'),
+    cookieParser = require('cookie-parser'),
+    compress = require('compression'),
+    methodOverride =require('method-override'),
+    path = require('path'),
+    appRoot = require('app-root-path');
 
 
 //Mongo connection
@@ -19,6 +25,14 @@ mongoose.connect(config.db, { useNewUrlParser: true });
 // Body parsing
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+
+app.use(cookieParser());
+app.use(compress());
+app.use(methodOverride());
+
+// secure apps by setting various HTTP headers
+app.use(helmet());
 
 // header settings
 app.use(cors());
@@ -37,13 +51,23 @@ app.use(function (req, res, next) {
     }
 });
 
+// Swagger doc
+/*app.use(express.static(path.join(appRoot.path, 'swagger')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(appRoot.path, 'swagger/index.html'));
+  });*/
+
+
+app.use(express.static(path.join(appRoot.path, 'swagger')));
+app.get('/swagger', (req, res) => {
+    res.sendFile(path.join(appRoot.path, 'swagger/index.html'));
+  });
+
+logger.info('Swagger API running!');
+
 // Routing
 var routes = require('./api/routes/todoListRoutes');
 routes(app);
-
-// Swagger doc
-app.use(express.static('dist'));
-logger.info('Swagger API running!');
 
 // Error path
 app.use(function (req, res) {

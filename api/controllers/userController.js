@@ -23,6 +23,7 @@ exports.register = function(req,res){
             });
         } else {
             user.hash_password = undefined;
+            logger.info(user);
             return res.json(user);
         }
     })
