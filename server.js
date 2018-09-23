@@ -66,7 +66,7 @@ app.get('/swagger', (req, res) => {
 logger.info('Swagger API running!');
 
 // Routing
-var routes = require('./api/routes/todoListRoutes');
+var routes = require('./api/routes/routes');
 routes(app);
 
 // Error path
