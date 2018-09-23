@@ -1,4 +1,6 @@
 var express = require('express'),
+    winstonInstance = require('./logger'),
+    expressWinston = require('express-winston'),
     app = express(),
     port = process.env.PORT || 3000,
     mongoose = require('mongoose'),
@@ -74,6 +76,10 @@ app.use(function (req, res) {
     logger.info(req.originalUrl + ' not found');
     res.status(404).send({ url: req.originalUrl + ' not found' })
 });
+
+app.use(expressWinston.errorLogger({
+    winstonInstance
+  }));
 
 app.listen(port);
 
