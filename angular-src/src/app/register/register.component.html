@@ -1,5 +1,5 @@
 
-<form align="center" class="example-form">
+<form align="center">
   <br><br>
   <mat-form-field class="full-width">
     <input matInput placeholder="Name" [formControl]="name">
@@ -27,6 +27,7 @@
       Password is <strong>required</strong>
     </mat-error>
   </mat-form-field>
+  <br>
   <mat-form-field class="full-width">
     <input matInput type="password" placeholder="Confirm Password"
       [formControl]="confirmPassword">
@@ -41,15 +42,17 @@
     [disabled]="!name.valid || !email.valid || !password.valid ||
     !confirmPassword.valid" color="primary" (click)="register(name.value,
     email.value, password.value)">Create account!</button>
-    <p>
-    
-        <ngb-alert *ngIf="successMessage" type="success" [dismissible]="false" (close)="successMessage = null">{{ successMessage }}</ngb-alert>
-        
-        <ngb-alert *ngIf="failMessage" type="danger" [dismissible]="false"  (close)="failMessage = null">{{ failMessage }}</ngb-alert>
-         
-      </p>
+  <p>
+
+    <ngb-alert *ngIf="successMessage" type="success" [dismissible]="false"
+      (close)="successMessage= null">{{ successMessage }}</ngb-alert>
+
+    <ngb-alert *ngIf="failMessage" type="danger" [dismissible]="false"
+      (close)="failMessage= null">{{ failMessage }}</ngb-alert>
+
+  </p>
 
 </form>
 <div align="center">
-    <button routerLink="/login">Login</button>
+  <button mat-button routerLink="/login">Login</button>
 </div>

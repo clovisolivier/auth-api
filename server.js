@@ -69,10 +69,15 @@ app.get('/swagger', (req, res) => {
 logger.info('Swagger API running!');
 */
 
-app.use(express.static(path.join(__dirname, 'public')));
 // Routing
 var routes = require('./api/routes/routes');
 routes(app);
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname + '/public/index.html'));
+});
 
 // Error path
 app.use(function (req, res) {
