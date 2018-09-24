@@ -17,8 +17,8 @@ const httpOptions = {
 })
 export class AuthService {
 
-  private authUrlLogin = environment.apiUrl + '/auth/sign_in';
-  private authUrlRegister  = environment.apiUrl + '/auth/register';
+  private authUrlLogin = '/api/auth/sign_in';
+  private authUrlRegister = '/api/auth/register';
   private user: User;
   private userRegister: UserRegistered;
   constructor(
