@@ -25,11 +25,19 @@
     (click)="login(email.value, password.value)">Log</button>
 
   <p>
-    
-    <ngb-alert *ngIf="successMessage" type="success" [dismissible]="false" (close)="successMessage = null">{{ successMessage }}</ngb-alert>
-    
-    <ngb-alert *ngIf="failMessage" type="danger" [dismissible]="false"  (close)="failMessage = null">{{ failMessage }}</ngb-alert>
-     
+
+    <ngb-alert *ngIf="successMessage" type="success" [dismissible]="false"
+      (close)="successMessage= null">{{ successMessage }}</ngb-alert>
+
+    <ngb-alert *ngIf="failMessage" type="danger" [dismissible]="false"
+      (close)="failMessage= null">{{ failMessage }}</ngb-alert>
+
   </p>
 
+ 
+
 </form>
+<div align="center">
+    <button routerLink="/forgot">Forgot Password</button>
+    <button routerLink="/register">Sign Up</button>
+</div>

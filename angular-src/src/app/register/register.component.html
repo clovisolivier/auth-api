@@ -39,7 +39,7 @@
   <br>
   <button mat-raised-button
     [disabled]="!name.valid || !email.valid || !password.valid ||
-    !confirmPassword.valid"color="primary" (click)="register(name.value,
+    !confirmPassword.valid" color="primary" (click)="register(name.value,
     email.value, password.value)">Create account!</button>
     <p>
     
@@ -50,3 +50,6 @@
       </p>
 
 </form>
+<div align="center">
+    <button routerLink="/login">Login</button>
+</div>
