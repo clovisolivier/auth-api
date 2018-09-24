@@ -532,7 +532,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -546,15 +545,14 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-
 var httpOptions = {
     headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Content-Type': 'application/json' })
 };
 var AuthService = /** @class */ (function () {
     function AuthService(http) {
         this.http = http;
-        this.authUrlLogin = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl + '/auth/sign_in';
-        this.authUrlRegister = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl + '/auth/register';
+        this.authUrlLogin = '/api/auth/sign_in';
+        this.authUrlRegister = '/api/auth/register';
     }
     AuthService.prototype.login = function (email, password) {
         var _this = this;
@@ -1004,8 +1002,7 @@ __webpack_require__.r(__webpack_exports__);
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 var environment = {
-    production: false,
-    apiUrl: 'http://localhost:3000'
+    production: false
 };
 /*
  * In development mode, for easier debugging, you can ignore zone related error
