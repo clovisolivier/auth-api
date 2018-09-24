@@ -1,0 +1,11 @@
+<br>
+<div align="center">
+      <ngx-qrcode
+            [qrc-element-type]="'img'"
+            [qrc-value]="value"
+            qrc-class="aclass"
+            qrc-errorCorrectionLevel="L">
+      </ngx-qrcode>
+      <br>
+      <button mat-raised-button color="primary" (click)="renderQR()">Refresh !</button>
+</div>

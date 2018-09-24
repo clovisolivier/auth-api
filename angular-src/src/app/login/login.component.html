@@ -1,0 +1,35 @@
+
+<form align="center" class="example-form">
+  <br><br>
+  <mat-form-field class="full-width">
+    <input matInput type="mail" placeholder="Email" [formControl]="email">
+    <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
+      Please enter a valid email address
+    </mat-error>
+    <mat-error *ngIf="email.hasError('required')">
+      Email is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <br><br>
+  <mat-form-field class="full-width">
+    <input matInput type="password" placeholder="Password"
+      [formControl]="password">
+    <mat-error *ngIf="password.hasError('required')">
+      Password is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <br>
+  <br>
+  <button mat-raised-button
+    [disabled]="!email.valid || !password.valid" color="primary"
+    (click)="login(email.value, password.value)">Log</button>
+
+  <p>
+    
+    <ngb-alert *ngIf="successMessage" type="success" [dismissible]="false" (close)="successMessage = null">{{ successMessage }}</ngb-alert>
+    
+    <ngb-alert *ngIf="failMessage" type="danger" [dismissible]="false"  (close)="failMessage = null">{{ failMessage }}</ngb-alert>
+     
+  </p>
+
+</form>

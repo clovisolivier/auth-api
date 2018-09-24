@@ -16,9 +16,10 @@ var express = require('express'),
     compress = require('compression'),
     methodOverride =require('method-override'),
     path = require('path'),
-    appRoot = require('app-root-path');
+    appRoot = require('app-root-path'),
+    morgan = require('morgan');
 
-
+    app.use(morgan('tiny'));
 //Mongo connection
 mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
@@ -59,14 +60,16 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(appRoot.path, 'swagger/index.html'));
   });*/
 
-
+/*
 app.use(express.static(path.join(appRoot.path, 'swagger')));
 app.get('/swagger', (req, res) => {
     res.sendFile(path.join(appRoot.path, 'swagger/index.html'));
   });
 
 logger.info('Swagger API running!');
+*/
 
+app.use(express.static(path.join(__dirname, 'public')));
 // Routing
 var routes = require('./api/routes/routes');
 routes(app);
