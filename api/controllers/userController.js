@@ -39,7 +39,7 @@ exports.register = function (req, res) {
 exports.sign_in = function (req, res) {
     Joi.validate({ email: req.body.email, password: req.body.password }, credential, function (err, value) {
         if (err) {
-            res.status(400).json({message : err.details});
+            res.status(400).json({ message: err.details });
         } else {
             User.findOne({
                 email: req.body.email
@@ -94,6 +94,19 @@ exports.forgot_password = function (req, res) {
             });
         },
         function (user, token, done) {
+            user.reset_password_token = token;
+            user.save(function (err, user) {
+                if (err) {
+                    logger.error(err);
+                    done(err);
+                } else {
+                    user.hash_password = undefined;
+                    logger.info(user);
+                    done(err, user, token);
+                }
+            })
+        },
+        function (user, token, done) {
             var data = {
                 to: user.email,
                 from: emailfrom,
@@ -108,6 +121,7 @@ exports.forgot_password = function (req, res) {
                 if (!err) {
                     return res.json({ message: 'Kindly check your email for further instructions' });
                 } else {
+                    logger.error(err);
                     return done(err);
                 }
             })
@@ -120,10 +134,10 @@ exports.forgot_password = function (req, res) {
 
 exports.reset_password = function (req, res, next) {
     User.findOne({
-        reset_password_token: req.body.token,
-        reset_password_expires: {
+        reset_password_token: req.body.token
+        /*reset_password_expires: {
             $gt: Date.now()
-        }
+        }*/
     }).exec(function (err, user) {
         if (!err && user) {
             if (req.body.newPassword === req.body.verifyPassword) {

@@ -29,6 +29,12 @@ var mongoose = require('mongoose'),
          type: Date,
          default: Date.now
      },
+     reset_password_token:{
+        type:String
+     },
+     reset_password_expires:{
+        type:String
+     },
     role: {
         type: [{
             type: String,
