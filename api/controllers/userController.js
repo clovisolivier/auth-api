@@ -1,23 +1,28 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-jwt = require('jsonwebtoken'),
-bcrypt = require('bcrypt'),
-User = mongoose.model('User'),
-async = require('async'),
-crypto = require('crypto'),
-smtpTransport = require('../../Handlebars.js'),
-config = require('../../config/index'),
-logger = require('../../logger'),
-endpoint = process.env.ENDPOINT,
-emailfrom = process.env.SENDGRID_USERNAME;
+    jwt = require('jsonwebtoken'),
+    bcrypt = require('bcrypt'),
+    User = mongoose.model('User'),
+    async = require('async'),
+    crypto = require('crypto'),
+    smtpTransport = require('../../Handlebars.js'),
+    config = require('../../config/index'),
+    logger = require('../../logger'),
+    endpoint = process.env.ENDPOINT,
+    emailfrom = process.env.SENDGRID_USERNAME,
+    Joi = require('joi');
 
+const credential = Joi.object().keys({
+    password: Joi.string().regex(/^[a-zA-Z0-9]{6,30}$/).required(),
+    email: Joi.string().email({ minDomainAtoms: 2 }).required()
+});
 
-exports.register = function(req,res){
+exports.register = function (req, res) {
 
     var newUser = new User(req.body);
     newUser.hash_password = bcrypt.hashSync(req.body.password, 10);
-    newUser.save(function(err, user){
+    newUser.save(function (err, user) {
         if (err) {
             logger.error(err);
             return res.status(400).send({
@@ -31,128 +36,133 @@ exports.register = function(req,res){
     })
 };
 
-exports.sign_in = function(req, res) {
-    //TODO check req.body.password exist
-    User.findOne({
-        email: req.body.email
-    }, function(err, user){
-        if (err) logger.error(err);
-        if (!user){
-            res.status(401).json({ message: 'Authentication failed. User not found.'});
-        } else if (user){
-            if (!user.comparePassword(req.body.password)){
-                res.status(401).json({message: 'Authentication failed. Wrong password.'});
-            }else {
-                res.json({
-                    token: jwt.sign({
-                        email: user.email,
-                        fullName: user.fullName,
-                        _id: user._id
-                        }, config.secureKey
-                    )
-                });
-            }
+exports.sign_in = function (req, res) {
+    Joi.validate({ email: req.body.email, password: req.body.password }, credential, function (err, value) {
+        if (err) {
+            res.status(400).json({message : err.details});
+        } else {
+            User.findOne({
+                email: req.body.email
+            }, function (err, user) {
+                if (err) logger.error(err);
+                if (!user) {
+                    res.status(401).json({ message: 'Authentication failed. User not found.' });
+                } else if (user) {
+                    if (!user.comparePassword(req.body.password)) {
+                        res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+                    } else {
+                        res.json({
+                            token: jwt.sign({
+                                email: user.email,
+                                fullName: user.fullName,
+                                _id: user._id
+                            }, config.secureKey
+                            )
+                        });
+                    }
+                }
+            });
         }
     });
 };
 
-exports.loginRequired = function(req, res, next){
+exports.loginRequired = function (req, res, next) {
     if (req.user) {
         next();
     } else {
-        return res.status(401).json({message: 'Unauthorised user!'});
+        return res.status(401).json({ message: 'Unauthorised user!' });
     }
 };
 
-exports.forgot_password = function(req, res){
+exports.forgot_password = function (req, res) {
     async.waterfall([
-        function(done){
+        function (done) {
             User.findOne({
                 email: req.body.email
-            }).exec(function(err, user){
-                if(user){
+            }).exec(function (err, user) {
+                if (user) {
                     done(err, user);
-                }else {
+                } else {
                     done('User not found.');
                 }
             });
         },
-        function(user, done){
-            crypto.randomBytes(20,function(err, buffer){
+        function (user, done) {
+            crypto.randomBytes(20, function (err, buffer) {
                 var token = buffer.toString('hex');
                 done(err, user, token);
             });
         },
-        function(user, token, done){
+        function (user, token, done) {
             var data = {
-                to : user.email,
-                from : emailfrom,
-                template :'forgot-password-email',
-                subject : 'Password help has arrived!',
-                context : {
-                    url : endpoint+'/api/auth/reset_password?token=' + token,
-                    name : user.fullName.split(' ')[0]
+                to: user.email,
+                from: emailfrom,
+                template: 'forgot-password-email',
+                subject: 'Password help has arrived!',
+                context: {
+                    url: endpoint + '/api/auth/reset_password?token=' + token,
+                    name: user.fullName.split(' ')[0]
                 }
             };
-            smtpTransport.sendMail(data, function(err){
-                if (!err){
-                    return res.json({ message : 'Kindly check your email for further instructions' });
+            smtpTransport.sendMail(data, function (err) {
+                if (!err) {
+                    return res.json({ message: 'Kindly check your email for further instructions' });
                 } else {
                     return done(err);
                 }
             })
         }
-    ], function(err){
+    ], function (err) {
         logger.error(err);
-        return res.status(422).json({message: err});
+        return res.status(422).json({ message: err });
     });
 };
 
-exports.reset_password = function(req, res, next){
+exports.reset_password = function (req, res, next) {
     User.findOne({
         reset_password_token: req.body.token,
         reset_password_expires: {
-            $gt : Date.now()
+            $gt: Date.now()
         }
-    }).exec(function(err, user){
-        if(!err && user){
-            if (req.body.newPassword === req.body.verifyPassword){
+    }).exec(function (err, user) {
+        if (!err && user) {
+            if (req.body.newPassword === req.body.verifyPassword) {
                 user.hash_password = bcrypt.hashSync(req.body.newPassword, 10);
                 user.reset_password_token = undefined;
                 user.reset_password_expires = undefined;
-                user.save(function(err){
-                    if(err){
+                user.save(function (err) {
+                    if (err) {
                         logger.error(err);
                         return res.status(422).send({
-                            message:err
+                            message: err
                         });
-                    }else {
+                    } else {
                         var data = {
-                            to : user.email,
-                            from : emailfrom,
-                            template : 'reset-password-email',
+                            to: user.email,
+                            from: emailfrom,
+                            template: 'reset-password-email',
                             subject: 'Password Reset Confirmation',
-                            context : {
-                                name : user.fullName.split(' ')[0]
+                            context: {
+                                name: user.fullName.split(' ')[0]
                             }
                         };
 
-                        smtpTransport.sendMail(data, function(err){
-                            if (!err){
-                                return res.json({message: 'Password reset'});
+                        smtpTransport.sendMail(data, function (err) {
+                            if (!err) {
+                                return res.json({ message: 'Password reset' });
                             } else {
-                                logger.error(err); 
+                                logger.error(err);
                                 return done(err);
-                            } 
+                            }
                         });
                     }
                 });
-            }else {
+            } else {
                 return res.status(422).send({
                     message: 'Passwords do not match'
                 });
             }
-        }else {
+        } else {
             return res.status(400).send({
                 message: 'Password reset token is invalid or has expired.'
             });

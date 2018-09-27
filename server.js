@@ -14,12 +14,12 @@ var config = require('./config/index'),
     helmet = require('helmet'),
     cookieParser = require('cookie-parser'),
     compress = require('compression'),
-    methodOverride =require('method-override'),
+    methodOverride = require('method-override'),
     path = require('path'),
     appRoot = require('app-root-path'),
     morgan = require('morgan');
 
-    app.use(morgan('tiny'));
+app.use(morgan('tiny'));
 //Mongo connection
 mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
@@ -75,7 +75,7 @@ routes(app);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('*', function(req, res) {
+app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
@@ -87,7 +87,7 @@ app.use(function (req, res) {
 
 app.use(expressWinston.errorLogger({
     winstonInstance
-  }));
+}));
 
 app.listen(port);
 
