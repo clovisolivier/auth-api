@@ -8,7 +8,8 @@ async = require('async'),
 crypto = require('crypto'),
 smtpTransport = require('../../Handlebars.js'),
 config = require('../../config/index'),
-logger = require('../../logger');;
+logger = require('../../logger'),
+emailfrom = process.env.SENDGRID_USERNAME;
 
 
 exports.register = function(req,res){
@@ -82,9 +83,10 @@ exports.forgot_password = function(req, res){
             });
         },
         function(user, token, done){
+            logger.info('smtpTransport.email'  + emailfrom );
             var data = {
                 to : user.email,
-                from : smtpTransport.email,
+                from : emailfrom,
                 template :'forgot-password-email',
                 subject : 'Password help has arrived!',
                 context : {
@@ -94,7 +96,7 @@ exports.forgot_password = function(req, res){
             };
             smtpTransport.sendMail(data, function(err){
                 if (!err){
-                    return res.json({ message : 'Kindly check your email for further instructions' + 'from' + mtpTransport.email});
+                    return res.json({ message : 'Kindly check your email for further instructions' });
                 } else {
                     return done(err);
                 }
@@ -127,7 +129,7 @@ exports.reset_password = function(req, res, next){
                     }else {
                         var data = {
                             to : user.email,
-                            from : smtpTransport.email,
+                            from : emailfrom,
                             template : 'reset-password-email',
                             subject: 'Password Reset Confirmation',
                             context : {
