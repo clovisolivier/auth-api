@@ -30,6 +30,7 @@ exports.register = function(req,res){
 };
 
 exports.sign_in = function(req, res) {
+    //TODO check req.body.password exist
     User.findOne({
         email: req.body.email
     }, function(err, user){
@@ -93,7 +94,7 @@ exports.forgot_password = function(req, res){
             };
             smtpTransport.sendMail(data, function(err){
                 if (!err){
-                    return res.json({ message : 'Kindly check your email for further instructions'});
+                    return res.json({ message : 'Kindly check your email for further instructions' + 'from' + mtpTransport.email});
                 } else {
                     return done(err);
                 }
