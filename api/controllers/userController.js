@@ -11,7 +11,8 @@ var mongoose = require('mongoose'),
     logger = require('../../logger'),
     endpoint = process.env.ENDPOINT,
     emailfrom = process.env.SENDGRID_USERNAME,
-    Joi = require('joi');
+    Joi = require('joi'),
+    moment = require('moment');
 
 const credential = Joi.object().keys({
     password: Joi.string().regex(/^[a-zA-Z0-9]{6,30}$/).required(),
@@ -95,6 +96,7 @@ exports.forgot_password = function (req, res) {
         },
         function (user, token, done) {
             user.reset_password_token = token;
+            user.reset_password_expires = moment().add(1, 'day').valueOf();
             user.save(function (err, user) {
                 if (err) {
                     logger.error(err);
@@ -134,10 +136,10 @@ exports.forgot_password = function (req, res) {
 
 exports.reset_password = function (req, res, next) {
     User.findOne({
-        reset_password_token: req.body.token
-        /*reset_password_expires: {
-            $gt: Date.now()
-        }*/
+        reset_password_token: req.body.token,
+        reset_password_expires: {
+            $gt: moment().valueOf()
+        }
     }).exec(function (err, user) {
         if (!err && user) {
             if (req.body.newPassword === req.body.verifyPassword) {
