@@ -9,6 +9,7 @@ crypto = require('crypto'),
 smtpTransport = require('../../Handlebars.js'),
 config = require('../../config/index'),
 logger = require('../../logger'),
+endpoint = process.env.ENDPOINT,
 emailfrom = process.env.SENDGRID_USERNAME;
 
 
@@ -83,14 +84,13 @@ exports.forgot_password = function(req, res){
             });
         },
         function(user, token, done){
-            logger.info('smtpTransport.email'  + emailfrom );
             var data = {
                 to : user.email,
                 from : emailfrom,
                 template :'forgot-password-email',
                 subject : 'Password help has arrived!',
                 context : {
-                    url : 'http://localhost:3000/auth/reset_password?token=' + token,
+                    url : endpoint+'/api/auth/reset_password?token=' + token,
                     name : user.fullName.split(' ')[0]
                 }
             };

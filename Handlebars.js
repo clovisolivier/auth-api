@@ -5,7 +5,7 @@ var hbs = require('nodemailer-express-handlebars'),
     nodemailer = require('nodemailer');
 
 var smtpTransport = nodemailer.createTransport({
-    service: process.env.MAILER_SERVICE_PROVIDER || 'Gmail',
+    service: process.env.MAILER_SERVICE_PROVIDER ,
     auth: {
         user: email,
         pass : pass
