@@ -2,7 +2,7 @@
   "name": "qrapp",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "./index.js",
   "scripts": {
     "test": "NODE_ENV=test mocha --timeout 1000",
     "test-coverage": "NODE_ENV=test istanbul cover _mocha -- -R spec"

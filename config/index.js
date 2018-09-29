@@ -1,7 +1,7 @@
 'use strict';
 require('dotenv').config();
 
-var env = process.env.NODE_ENV || 'development';
-var config = require(`./${env}`);
+const env = process.env.NODE_ENV || 'development';
+const config = require(`./${env}`);
 
 module.exports = config;

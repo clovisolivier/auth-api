@@ -1,6 +1,6 @@
 'use strict';
 
-var mongoose = require('mongoose'),
+const mongoose = require('mongoose'),
     jwt = require('jsonwebtoken'),
     bcrypt = require('bcrypt'),
     User = mongoose.model('User'),
@@ -21,7 +21,7 @@ const credential = Joi.object().keys({
 
 exports.register = function (req, res) {
 
-    var newUser = new User(req.body);
+    let newUser = new User(req.body);
     newUser.hash_password = bcrypt.hashSync(req.body.password, 10);
     newUser.save(function (err, user) {
         if (err) {
@@ -90,7 +90,7 @@ exports.forgot_password = function (req, res) {
         },
         function (user, done) {
             crypto.randomBytes(20, function (err, buffer) {
-                var token = buffer.toString('hex');
+                let token = buffer.toString('hex');
                 done(err, user, token);
             });
         },
@@ -109,7 +109,7 @@ exports.forgot_password = function (req, res) {
             })
         },
         function (user, token, done) {
-            var data = {
+            let data = {
                 to: user.email,
                 from: emailfrom,
                 template: 'forgot-password-email',
@@ -153,7 +153,7 @@ exports.reset_password = function (req, res, next) {
                             message: err
                         });
                     } else {
-                        var data = {
+                        let data = {
                             to: user.email,
                             from: emailfrom,
                             template: 'reset-password-email',

@@ -1,6 +1,6 @@
 'use strict';
 
-var mongoose = require('mongoose'),
+const mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
     Schema = mongoose.Schema;
 
@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
  * User Schema
  */
 
- var UserSchema = new Schema({
+ const UserSchema = new Schema({
      fullName: {
          type: String,
          trim: true,

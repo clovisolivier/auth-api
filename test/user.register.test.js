@@ -1,19 +1,19 @@
 'use strict';
 
-var app = require('../server.js'),
+const app = require('../server.js'),
 chai = require('chai'),
 request = require('supertest');
 // Load Chance
-var Chance = require('chance');
+const Chance = require('chance');
 
 // Instantiate Chance so it can be used
-var chance = new Chance();
+const chance = new Chance();
 
-var expect = chai.expect;
+const expect = chai.expect;
 
 describe('Todos list API Registration Tests', function(){
     describe('#POST /auth/register', function (){
-        var user = {
+        let user = {
             fullName : 'fullNameTest',
             email : 'test.test@gmail.com'
         }
@@ -27,7 +27,7 @@ describe('Todos list API Registration Tests', function(){
     });
 
     describe('#POST /auth/register', function (){
-        var user = {
+        let user = {
             fullName : 'fullNameTest',
             email : 'test.test@gmail.com',
             password : 'passwordTest'
@@ -42,7 +42,7 @@ describe('Todos list API Registration Tests', function(){
     });
 
     describe('#POST /auth/register', function (){
-        var user = {
+        let user = {
             fullName : 'fullNameTest',
             email : chance.email(),
             password : 'passwordTest'

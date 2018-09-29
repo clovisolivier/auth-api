@@ -1,4 +1,4 @@
-var config = require('./config/index'),
+const config = require('./config'),
     express = require('express'),
     winstonInstance = require('./logger'),
     expressWinston = require('express-winston'),
@@ -70,7 +70,7 @@ logger.info('Swagger API running!');
 */
 
 // Routing
-var routes = require('./api/routes/routes');
+const routes = require('./api/routes/routes');
 routes(app);
 
 app.use(express.static(path.join(__dirname, 'public')));

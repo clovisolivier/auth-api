@@ -1,10 +1,10 @@
 'use strict';
 
-var app = require('../server.js'),
+const app = require('../server.js'),
 chai = require('chai'),
 request = require('supertest');
 
-var expect = chai.expect;
+const expect = chai.expect;
 
 describe('Todos list API Integration Tests', function(){
     describe('#GET / Tasks', function (){
@@ -21,14 +21,14 @@ describe('Todos list API Integration Tests', function(){
 });
 
 describe('API Tests', function(){
-    var user = {
+    let user = {
         email : 'test.test@gmail.com',
         password: 'passwordTest'
     }
-    var task = {
+    let task = {
         name: 'integration test'
     };
-    var token ='';
+    let token ='';
     describe('# Get all tasks', function() {
         it('should get all tasks', function (done){
             request(app).get('/tasks')
