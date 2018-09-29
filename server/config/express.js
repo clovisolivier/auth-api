@@ -45,7 +45,7 @@ app.use(function (req, res, next) {
     }
 });
 // Routing
-const routes = require('../../api/routes/routes');
+const routes = require('../api/routes/routes');
 routes(app);
 
 app.use(express.static(path.join(__dirname, '../../public')));
