@@ -31,7 +31,8 @@
   <mat-form-field class="full-width">
     <input matInput type="password" placeholder="Confirm Password"
       [formControl]="confirmPassword">
-    <mat-hint></mat-hint>
+    
+      <mat-hint *ngIf="password.value != confirmPassword.value">Password are not matching</mat-hint>
     <mat-error *ngIf="confirmPassword.hasError('required')">
       Password is <strong>required</strong>
     </mat-error>
@@ -40,7 +41,7 @@
   <br>
   <button mat-raised-button
     [disabled]="!name.valid || !email.valid || !password.valid ||
-    !confirmPassword.valid" color="primary" (click)="register(name.value,
+    !confirmPassword.valid || password.value != confirmPassword.value" color="primary" (click)="register(name.value,
     email.value, password.value)">Create account!
   </button>
 
