@@ -5,6 +5,7 @@ import { LoginComponent }   from './login/login.component';
 import { RegisterComponent }   from './register/register.component';
 import { QrCodeComponent }   from './qr-code/qr-code.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 const routes: Routes = [
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'qrcode', component: QrCodeComponent } ,
   { path: 'forgot-password', component: ForgotPasswordComponent } ,
+  { path: 'reset-password', component: ResetPasswordComponent } ,
   { path: '**', component: QrCodeComponent }
 ];
 

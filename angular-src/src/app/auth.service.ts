@@ -16,10 +16,13 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
+  
 
   private authUrlLogin = environment.endpoint + '/api/auth/sign_in';
   private authUrlRegister = environment.endpoint + '/api/auth/register';
   private authUrlForgotPassword = environment.endpoint + '/api/auth/forgot_password';
+  private authUrlResetPassword = environment.endpoint + '/api/auth/reset_password';
+  
   private user: User;
   private userRegister: UserRegistered;
   constructor(
@@ -39,7 +42,7 @@ export class AuthService {
   forgotPassword(email: string): Observable<string> {
     const url = `${this.authUrlForgotPassword}`;
     return this.http.post<string>(url, {email:email}, httpOptions ).pipe(
-      tap(_ => this.log(`fetched token`)),
+      tap(_ => this.log(`Mail sent`)),
       //catchError(this.handleError<Token>(`Log in as email=${email}`))
     );
     
@@ -54,6 +57,14 @@ export class AuthService {
     );
     
   };
+
+  resetPassword(password: string, confirmpassword: string, token: string): Observable<string> {
+    const url = `${this.authUrlResetPassword}`;
+    return this.http.post<string>(url, {newPassword: password, verifyPassword : confirmpassword, token : token }, httpOptions ).pipe(
+      tap(_ => this.log(`Reset password`)),
+      //catchError(this.handleError<Token>(`Log in as email=${email}`))
+    );
+  }
 /*
   addHero (hero: Hero): Observable<Hero> {
     return this.http.post<Hero>(this.heroesUrl, hero, httpOptions).pipe(
