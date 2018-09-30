@@ -11,7 +11,8 @@ const express = require('express'),
     helmet = require('helmet'),
     cookieParser = require('cookie-parser'),
     compress = require('compression'),
-    methodOverride = require('method-override');
+    methodOverride = require('method-override'),
+    httpStatus = require('http-status');
 
 const app = express();
 app.use(morgan('tiny'));
@@ -62,5 +63,16 @@ app.use(function (req, res) {
 app.use(expressWinston.errorLogger({
     winstonInstance
 }));
+
+// error handler, send stacktrace 
+app.use(function(err, req, res, next) {
+    console.error(err);
+    if (httpStatus.BAD_REQUEST){
+        res.status(httpStatus.BAD_REQUEST).send({
+            validation : err.errors
+        })
+    }else
+    res.status(500).send('Something went wrong :(');
+  });
 
 module.exports = app;

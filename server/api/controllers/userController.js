@@ -11,13 +11,13 @@ const mongoose = require('mongoose'),
     logger = require('../../../logger'),
     endpoint = process.env.ENDPOINT,
     emailfrom = process.env.SENDGRID_USERNAME,
-    Joi = require('joi'),
     moment = require('moment');
 
-const credential = Joi.object().keys({
-    password: Joi.string().regex(/^[a-zA-Z0-9]{6,30}$/).required(),
-    email: Joi.string().email({ minDomainAtoms: 2 }).required()
-});
+/*
+exports.test = function (req, res) {
+    return res.status(200).send({message: 'OK'});
+};
+*/
 
 exports.register = function (req, res) {
 
@@ -38,33 +38,29 @@ exports.register = function (req, res) {
 };
 
 exports.sign_in = function (req, res) {
-    Joi.validate({ email: req.body.email, password: req.body.password }, credential, function (err, value) {
-        if (err) {
-            res.status(400).json({ message: err.details });
-        } else {
-            User.findOne({
-                email: req.body.email
-            }, function (err, user) {
-                if (err) logger.error(err);
-                if (!user) {
-                    res.status(401).json({ message: 'Authentication failed. User not found.' });
-                } else if (user) {
-                    if (!user.comparePassword(req.body.password)) {
-                        res.status(401).json({ message: 'Authentication failed. Wrong password.' });
-                    } else {
-                        res.json({
-                            token: jwt.sign({
-                                email: user.email,
-                                fullName: user.fullName,
-                                _id: user._id
-                            }, config.secureKey
-                            )
-                        });
-                    }
+    
+        User.findOne({
+            email: req.body.email
+        }, function (err, user) {
+            if (err) logger.error(err);
+            if (!user) {
+                res.status(401).json({ message: 'Authentication failed. User not found.' });
+            } else if (user) {
+                if (!user.comparePassword(req.body.password)) {
+                    res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+                } else {
+                    res.json({
+                        token: jwt.sign({
+                            email: user.email,
+                            fullName: user.fullName,
+                            _id: user._id
+                        }, config.secureKey
+                        )
+                    });
                 }
-            });
-        }
-    });
+            }
+        });
+    
 };
 
 exports.loginRequired = function (req, res, next) {

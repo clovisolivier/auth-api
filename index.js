@@ -1,7 +1,7 @@
 const config = require('./config'),
 
     port = process.env.PORT,
-    Task = require('./server/api/models/todoListModel'),
+    //Task = require('./server/api/models/todoListModel'),
     User = require('./server/api/models/userModel'),
     logger = require('./logger'),
     app = require('./server/config/express');
