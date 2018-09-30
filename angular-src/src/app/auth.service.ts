@@ -19,6 +19,7 @@ export class AuthService {
 
   private authUrlLogin = environment.endpoint + '/api/auth/sign_in';
   private authUrlRegister = environment.endpoint + '/api/auth/register';
+  private authUrlForgotPassword = environment.endpoint + '/api/auth/forgot_password';
   private user: User;
   private userRegister: UserRegistered;
   constructor(
@@ -29,6 +30,15 @@ export class AuthService {
     const url = `${this.authUrlLogin}`;
     this.user= {email:email, password :password};
     return this.http.post<Token>(url, this.user, httpOptions ).pipe(
+      tap(_ => this.log(`fetched token`)),
+      //catchError(this.handleError<Token>(`Log in as email=${email}`))
+    );
+    
+  };
+
+  forgotPassword(email: string): Observable<string> {
+    const url = `${this.authUrlForgotPassword}`;
+    return this.http.post<string>(url, {email:email}, httpOptions ).pipe(
       tap(_ => this.log(`fetched token`)),
       //catchError(this.handleError<Token>(`Log in as email=${email}`))
     );
