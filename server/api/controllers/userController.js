@@ -9,8 +9,6 @@ const mongoose = require('mongoose'),
     smtpTransport = require('../../../Handlebars.js'),
     config = require('../../../config/index'),
     logger = require('../../../logger'),
-    endpoint = process.env.ENDPOINT,
-    emailfrom = process.env.SENDGRID_USERNAME,
     moment = require('moment');
 
 /*
@@ -38,29 +36,28 @@ exports.register = function (req, res) {
 };
 
 exports.sign_in = function (req, res) {
-    
-        User.findOne({
-            email: req.body.email
-        }, function (err, user) {
-            if (err) logger.error(err);
-            if (!user) {
-                res.status(401).json({ message: 'Authentication failed. User not found.' });
-            } else if (user) {
-                if (!user.comparePassword(req.body.password)) {
-                    res.status(401).json({ message: 'Authentication failed. Wrong password.' });
-                } else {
-                    res.json({
-                        token: jwt.sign({
-                            email: user.email,
-                            fullName: user.fullName,
-                            _id: user._id
-                        }, config.secureKey
-                        )
-                    });
-                }
+
+    User.findOne({
+        email: req.body.email
+    }, function (err, user) {
+        if (err) logger.error(err);
+        if (!user) {
+            res.status(401).json({ message: 'Authentication failed. User not found.' });
+        } else if (user) {
+            if (!user.comparePassword(req.body.password)) {
+                res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+            } else {
+                res.json({
+                    token: jwt.sign({
+                        email: user.email,
+                        fullName: user.fullName,
+                        _id: user._id
+                    }, config.secureKey
+                    )
+                });
             }
-        });
-    
+        }
+    });
 };
 
 exports.loginRequired = function (req, res, next) {
@@ -107,11 +104,11 @@ exports.forgot_password = function (req, res) {
         function (user, token, done) {
             let data = {
                 to: user.email,
-                from: emailfrom,
+                from: config.mailFrom,
                 template: 'forgot-password-email',
                 subject: 'Password help has arrived!',
                 context: {
-                    url: endpoint + '/api/auth/reset_password?token=' + token,
+                    url: config.endpoint + '/reset_password?token=' + token,
                     name: user.fullName.split(' ')[0]
                 }
             };

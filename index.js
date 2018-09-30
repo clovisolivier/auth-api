@@ -1,6 +1,4 @@
 const config = require('./config'),
-
-    port = process.env.PORT,
     //Task = require('./server/api/models/todoListModel'),
     User = require('./server/api/models/userModel'),
     logger = require('./logger'),
@@ -24,8 +22,8 @@ app.get('/swagger', (req, res) => {
 logger.info('Swagger API running!');
 */
 
-app.listen(port);
+app.listen(config.port);
 
-logger.info('Authentication API server started on : ' + port);
+logger.info('Authentication API server started on : ' + config.port);
 
 module.exports = app;

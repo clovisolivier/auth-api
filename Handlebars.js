@@ -1,20 +1,19 @@
 const hbs = require('nodemailer-express-handlebars'),
+    config = require('./config');
     path = require('path'),
-    email = process.env.SENDGRID_USERNAME,
-    pass = process.env.SENDGRID_PASSWORD,
     nodemailer = require('nodemailer');
 
 const smtpTransport = nodemailer.createTransport({
-    service: process.env.MAILER_SERVICE_PROVIDER ,
+    service: config.mailerServiceProvider ,
     auth: {
-        user: email,
-        pass : pass
+        user: config.sendgrid_username,
+        pass : config.sendgrid_password
     }
 });
 
 const handlebarsOptions = {
     viewEngine: 'handlebars',
-    viewPath: path.resolve('./api/templates/'),
+    viewPath: path.resolve('./server/api/templates/'),
     extName: '.html'
 };
 
